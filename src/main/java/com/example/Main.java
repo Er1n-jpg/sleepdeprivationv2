@@ -23,7 +23,6 @@ import java.nio.Buffer;
 
 public class Main {
 
-    public VideoCapture camera;
     public Mat image;
     public ImageIcon imageicon;
 
@@ -34,15 +33,16 @@ public class Main {
 
 
 
-
         
-        System.out.println("Camera closed.");
+        cameraopen();
 
     }
 
-    public void startcamera(){
-
-         CascadeClassifier faceDetector = new CascadeClassifier();
+    public static void cameraopen(){
+        System.out.println("yes");
+        CascadeClassifier faceDetector = new CascadeClassifier();
+        String classifierPath = "haarcascade_frontalface_default.xml";
+        faceDetector.load(classifierPath);
 
         JFrame newFeed = new JFrame("Camerafeed");
         newFeed.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,19 +52,36 @@ public class Main {
         newFeed.setVisible(true);
         newFeed.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        VideoCapture camera = new VideoCapture(0);
 
-            camera = new VideoCapture(0);
+             if (!camera.isOpened()){
+                System.out.println("Camera not open");
+                return;
+            }
+            System.out.println("open");
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }   
+
             Mat image = new Mat();
             MatOfRect faceDetections = new MatOfRect();
-
-            while(newFeed.isVisible()){
+            System.out.println("deeznuts");
+            ImageIcon frame = new ImageIcon(matToBufferedImage(image));
+            System.out.println("frame loaded");
+            Label.setIcon(frame);
+            newFeed.pack();
+            boolean dlajd = true;
+            while(dlajd){
                 camera.read(image);
+                System.out.println("Camera is visible");
 
-                
                 if (!image.empty()) {
                 // Detect faces
                 faceDetector.detectMultiScale(image, faceDetections);
-                
+                System.out.println("detected");
                 // Draw rectangles around detected faces
                 for (Rect rect : faceDetections.toArray()) {
                     Imgproc.rectangle(
@@ -75,14 +92,11 @@ public class Main {
                         3 // Thickness
                     );
                 }
-                
+            }   
                 System.out.println("Faces detected: " + faceDetections.toArray().length);
                 
                 // Display
-                ImageIcon frame = new ImageIcon(matToBufferedImage(image));
-                Label.setIcon(image);
-                frame.pack();
-            }
+
             
 
                 try{
@@ -93,7 +107,11 @@ public class Main {
                 }
             }
             camera.release();
+        
+
         }
+
+
 
         public static BufferedImage matToBufferedImage(Mat mat){
             int type = BufferedImage.TYPE_BYTE_GRAY;
