@@ -54,10 +54,10 @@ public class Main {
 
         VideoCapture camera = new VideoCapture(0);
 
-             if (!camera.isOpened()){
-                System.out.println("Camera not open");
-                return;
-            }
+        if (!camera.isOpened()){
+            System.out.println("Camera not open");
+            return;
+        }
             System.out.println("open");
 
             try {
@@ -68,15 +68,41 @@ public class Main {
 
             Mat image = new Mat();
             MatOfRect faceDetections = new MatOfRect();
-            System.out.println("deeznuts");
+  
+        while(newFeed.isVisible()){
+            camera.read(image);
+                System.out.println("Camera is visible");
+                if (image.empty() || image.cols() == 0 || image.rows() == 0) {
+                System.out.println("Empty frame, skipping...");
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                break;
+            }
+            continue;
+        }
+
+        System.out.println("Frame captured: " + image.cols() + "x" + image.rows());
+
+        // Detect faces
+        faceDetector.detectMultiScale(image, faceDetections);
+        
+        // Draw rectangles around detected faces
+        for (Rect rect : faceDetections.toArray()) {
+            Imgproc.rectangle(
+                image,
+                new Point(rect.x, rect.y),
+                new Point(rect.x + rect.width, rect.y + rect.height),
+                new Scalar(0, 255, 0),
+                3
+            );
+
+        }
             ImageIcon frame = new ImageIcon(matToBufferedImage(image));
             System.out.println("frame loaded");
             Label.setIcon(frame);
             newFeed.pack();
-            boolean dlajd = true;
-            while(dlajd){
-                camera.read(image);
-                System.out.println("Camera is visible");
+
 
                 if (!image.empty()) {
                 // Detect faces
