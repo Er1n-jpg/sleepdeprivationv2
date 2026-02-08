@@ -41,8 +41,12 @@ public class Main {
     public static void cameraopen(){
         System.out.println("yes");
         CascadeClassifier faceDetector = new CascadeClassifier();
+        CascadeClassifier eyeDetector = new CascadeClassifier();
         String classifierPath = "haarcascade_frontalface_default.xml";
+        String eyeClassifierPath = "haarcascade_eye.xml";
         faceDetector.load(classifierPath);
+        eyeDetector.load(eyeClassifierPath);
+        
 
         JFrame newFeed = new JFrame("Camerafeed");
         newFeed.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,82 +64,60 @@ public class Main {
         }
             System.out.println("open");
 
-            try {
+        try {
                 Thread.sleep(3000);
-            } catch (InterruptedException e){
+        } catch (InterruptedException e){
                 e.printStackTrace();
-            }   
+        }   
 
             Mat image = new Mat();
             MatOfRect faceDetections = new MatOfRect();
+            MatOfRect eyeDetections = new MatOfRect();
+
   
         while(newFeed.isVisible()){
             camera.read(image);
-                System.out.println("Camera is visible");
                 if (image.empty() || image.cols() == 0 || image.rows() == 0) {
                 System.out.println("Empty frame, skipping...");
+
+
             try {
-                Thread.sleep(30);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 break;
             }
             continue;
-        }
+         }   
 
-        System.out.println("Frame captured: " + image.cols() + "x" + image.rows());
-
-        // Detect faces
         faceDetector.detectMultiScale(image, faceDetections);
         
-        // Draw rectangles around detected faces
         for (Rect rect : faceDetections.toArray()) {
-            Imgproc.rectangle(
-                image,
-                new Point(rect.x, rect.y),
-                new Point(rect.x + rect.width, rect.y + rect.height),
-                new Scalar(0, 255, 0),
-                3
-            );
+            Imgproc.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 255, 0),3);
+
+        Mat faceArea = new Mat(image, rect);
+        eyeDetector.detectMultiScale(faceArea, eyeDetections);
+
+        for (Rect eyeRects: eyeDetections.toArray()){
+            Imgproc.rectangle(image,new Point( rect.x + eyeRects.x, rect.y + eyeRects.y), new Point(rect.x + eyeRects.x + eyeRects.width, rect.y + eyeRects.y + eyeRects.height), new Scalar(225,0,0),2);
+            }
+
 
         }
+
             ImageIcon frame = new ImageIcon(matToBufferedImage(image));
             System.out.println("frame loaded");
             Label.setIcon(frame);
-            newFeed.pack();
-
 
                 if (!image.empty()) {
-                // Detect faces
                 faceDetector.detectMultiScale(image, faceDetections);
-                System.out.println("detected");
-                // Draw rectangles around detected faces
-                for (Rect rect : faceDetections.toArray()) {
-                    Imgproc.rectangle(
-                        image,
-                        new Point(rect.x, rect.y),
-                        new Point(rect.x + rect.width, rect.y + rect.height),
-                        new Scalar(0, 255, 0), // Green color
-                        3 // Thickness
-                    );
-                }
+
             }   
-                System.out.println("Faces detected: " + faceDetections.toArray().length);
                 
-                // Display
 
-            
-
-                try{
-                    Thread.sleep(30);
-
-                } catch (InterruptedException e){
-                    break;
-                }
-            }
-            camera.release();
         
 
         }
+    }
 
 
 
