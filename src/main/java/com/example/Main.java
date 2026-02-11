@@ -57,6 +57,9 @@ public class Main {
         newFeed.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         VideoCapture camera = new VideoCapture(0);
+        camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_WIDTH, 1920);
+        camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_HEIGHT, 1080);
+        newFeed.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         if (!camera.isOpened()){
             System.out.println("Camera not open");
@@ -74,6 +77,12 @@ public class Main {
             MatOfRect faceDetections = new MatOfRect();
             MatOfRect eyeDetections = new MatOfRect();
 
+            boolean eyesopen = true;
+            int frameswoeyes = 0;
+            final int blinkthreshold = 3;
+            int blinkcounter = 0;
+
+
   
         while(newFeed.isVisible()){
             camera.read(image);
@@ -89,32 +98,55 @@ public class Main {
             continue;
          }   
 
+        boolean eyesdetectedtsframe = false;
         faceDetector.detectMultiScale(image, faceDetections);
         
         for (Rect rect : faceDetections.toArray()) {
             Imgproc.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 255, 0),3);
 
-        Mat faceArea = new Mat(image, rect);
+        int eyearea = (int)(rect.height * 0.5);
+
+        Rect eyeregion = new Rect(rect.x, rect.y,rect.width,eyearea);
+
+
+        Mat faceArea = new Mat(image, eyeregion);
         eyeDetector.detectMultiScale(faceArea, eyeDetections);
 
         for (Rect eyeRects: eyeDetections.toArray()){
-            Imgproc.rectangle(image,new Point( rect.x + eyeRects.x, rect.y + eyeRects.y), new Point(rect.x + eyeRects.x + eyeRects.width, rect.y + eyeRects.y + eyeRects.height), new Scalar(225,0,0),2);
+            Imgproc.rectangle(image,new Point( eyeregion.x + eyeRects.x, eyeregion.y + eyeRects.y), new Point(eyeregion.x + eyeRects.x + eyeRects.width, eyeregion.y + eyeRects.y + eyeRects.height), new Scalar(225,0,0),2);
             }
 
+            if (eyeDetections.toArray().length >= 1){
+                eyesdetectedtsframe = true;
+            }
 
         }
 
+        if (eyesdetectedtsframe){
+            if (!eyesopen && frameswoeyes >= blinkthreshold){
+                blinkcounter++;
+                System.out.println("Blinks:" + blinkcounter);
+            }
+
+            eyesopen = true;
+            frameswoeyes = 0;
+
+        } else{
+            frameswoeyes++;
+
+            if (frameswoeyes>= blinkthreshold){
+                eyesopen = false;
+            }
+        }
+     
+
             ImageIcon frame = new ImageIcon(matToBufferedImage(image));
-            System.out.println("frame loaded");
             Label.setIcon(frame);
 
                 if (!image.empty()) {
                 faceDetector.detectMultiScale(image, faceDetections);
 
             }   
-                
-
-        
 
         }
     }
