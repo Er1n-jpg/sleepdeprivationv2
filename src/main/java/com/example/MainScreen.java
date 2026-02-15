@@ -3,8 +3,6 @@ package com.example;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-
-import java.io.File;
 import java.awt.*;
 import java.io.*;
 import java.awt.event.*;
@@ -15,21 +13,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+import java.net.URL;
 
 public class MainScreen extends JFrame implements ActionListener, KeyListener, MouseListener{
     private Image backgroundImage;
     private JPanel backgroundPanel;
+    static JFrame frame;
 
 
-    public void Inputscreen() {
-        JFrame input = new JFrame();
-        input.setVisible(true);
-        input.setSize(1850, 1080);
-        input.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JLabel label1 = new JLabel("hihihihihi herroe");
-        input.add(label1);
+    public MainScreen() {
+        setBounds(0,0,1650,1080);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(null);
 
         backgroundPanel = new BackgroundPanel();
+        backgroundPanel.setBounds(0,0,1650,1080);
+        backgroundPanel.setLayout(null);
+        setContentPane(backgroundPanel);
         
 
 
@@ -92,11 +92,43 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener, M
     }
 
     class BackgroundPanel extends JPanel{
-        @Override
-        protected void paintComponent(Graphics g){
-            super.paintComponent(g);
-            Image background = new ImageIcon("BL.png").getImage();
-            g.drawImage(background,0,0,getWidth(),getHeight(),this);
+        private Image background;
+
+        public BackgroundPanel(){
+            System.out.println("Constructorcalled");
+
+            try{
+                URL imageURL = getClass().getResource("/BLink.png");
+                System.out.println("IMGURL:" + imageURL);
+
+                if (imageURL != null){
+                    background = ImageIO.read(imageURL);
+                } 
+            } catch (IOException e){
+                System.out.println("ioexception" + e.getMessage());
+                e.printStackTrace();
+
+            }
+
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                System.out.println("paintcomponent exists");
+
+                if (background != null){
+                    g.drawImage(background,0,0,getWidth(), getHeight(), this);
+                    System.out.println("drawfraw image");
+                } else {
+                    g.setColor(Color.RED);
+                    g.fillRect(0,0,getWidth(),getHeight());
+                    g.setColor(Color.WHITE);
+                    g.setFont(new Font("Arial",Font.BOLD,40));
+                    g.drawString("Imagenotloaded",200,200);
+                    System.out.println("Draw error");
+                }
+                
         }
     }
 

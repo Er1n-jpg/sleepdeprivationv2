@@ -32,19 +32,8 @@ public class Main {
     public Mat image;
     public ImageIcon imageicon;
 
-    public static void main(String[] args) {
-        System.out.println("Hello world!");
-        OpenCV.loadLocally();
-        System.out.println("OpenCV loaded successfully: " + Core.VERSION);
 
-
-
-        
-        cameraopen();
-
-    }
-
-    public static void cameraopen(){
+    public Main(){
         System.out.println("yes");
         CascadeClassifier faceDetector = new CascadeClassifier();
         CascadeClassifier eyeDetector = new CascadeClassifier();
