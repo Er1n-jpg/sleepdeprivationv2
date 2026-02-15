@@ -21,6 +21,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.nio.Buffer;
 
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+import java.util.Properties;
+
+
+
 public class Main {
 
     public Mat image;
@@ -57,7 +63,7 @@ public class Main {
         newFeed.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         VideoCapture camera = new VideoCapture(0);
-        camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_WIDTH, 1920);
+        camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_WIDTH, 1650);
         camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_HEIGHT, 1080);
         newFeed.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -65,13 +71,6 @@ public class Main {
             System.out.println("Camera not open");
             return;
         }
-            System.out.println("open");
-
-        try {
-                Thread.sleep(3000);
-        } catch (InterruptedException e){
-                e.printStackTrace();
-        }   
 
             Mat image = new Mat();
             MatOfRect faceDetections = new MatOfRect();
@@ -79,9 +78,12 @@ public class Main {
 
             boolean eyesopen = true;
             int frameswoeyes = 0;
-            final int blinkthreshold = 3;
+            final int blinkthreshold = 28;
             int blinkcounter = 0;
-
+            
+            long lastime = System.nanoTime();
+            int frames = 0;
+            double fps = 0.0;
 
   
         while(newFeed.isVisible()){
@@ -89,14 +91,19 @@ public class Main {
                 if (image.empty() || image.cols() == 0 || image.rows() == 0) {
                 System.out.println("Empty frame, skipping...");
 
-
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                break;
-            }
-            continue;
          }   
+
+         frames++;
+         long currentTime = System.nanoTime();
+         double elapsedTime = (currentTime - lastime)/1_000_000_000.0;
+
+         if (elapsedTime >= 1.0){
+            fps = frames/elapsedTime;
+            frames = 0;
+            lastime = currentTime;
+            System.out.println("Fps =" + String.format("%2f",fps));
+         }
+
 
         boolean eyesdetectedtsframe = false;
         faceDetector.detectMultiScale(image, faceDetections);
@@ -125,8 +132,9 @@ public class Main {
         if (eyesdetectedtsframe){
             if (!eyesopen && frameswoeyes >= blinkthreshold){
                 blinkcounter++;
+                sendemail("lamvienghe@gmail.com", "honk mimimimi", "Erm so I fell asleep");
                 System.out.println("Blinks:" + blinkcounter);
-            }
+        }
 
             eyesopen = true;
             frameswoeyes = 0;
@@ -149,24 +157,69 @@ public class Main {
             }   
 
         }
+
     }
 
 
 
-        public static BufferedImage matToBufferedImage(Mat mat){
-            int type = BufferedImage.TYPE_BYTE_GRAY;
-            if (mat.channels()> 1){
-                type = BufferedImage.TYPE_3BYTE_BGR;
-            }
-            int buffersize = mat.channels() * mat.cols() * mat.rows();
-            byte[] buffer = new byte [buffersize];
-            mat.get(0,0,buffer);
-            BufferedImage image = new BufferedImage(mat.cols(), mat.rows(), type);
-            final byte[] targetPixel = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-            System.arraycopy(buffer, 0, targetPixel, 0, buffer.length);
-            return image;
+    public static BufferedImage matToBufferedImage(Mat mat){
+        int type = BufferedImage.TYPE_BYTE_GRAY;
+        if (mat.channels()> 1){
+            type = BufferedImage.TYPE_3BYTE_BGR;
         }
-}        
+        int buffersize = mat.channels() * mat.cols() * mat.rows();
+        byte[] buffer = new byte [buffersize];
+        mat.get(0,0,buffer);
+        BufferedImage image = new BufferedImage(mat.cols(), mat.rows(), type);
+        final byte[] targetPixel = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        System.arraycopy(buffer, 0, targetPixel, 0, buffer.length);
+        return image;
+    }
+        
+    public static void sendemail(String toemail,String subject, String Body){
+        String Fromemail = "enchiboop@gmail.com";
+        String Password = "yokdahugmeqlcjyu";
+
+        Properties props= new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port","465");
+        props.put("mail.smtp.auth","true");
+        props.put("mail.smtp.ssl.enable","true");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(Fromemail, Password);
+            }
+        });
+
+        try{
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(Fromemail));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toemail));
+            message.setSubject(subject);
+            message.setText(Body);
+
+
+            Transport.send(message);
+        } catch (MessagingException e){
+            System.out.println("error");
+            e.printStackTrace();  // This prints the full error details
+        }
+
+        
+
+    }
+
+}
+
+
+
     
 
+
+        
+    
 
