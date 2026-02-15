@@ -79,8 +79,7 @@ public class Main {
             camera.read(image);
                 if (image.empty() || image.cols() == 0 || image.rows() == 0) {
                 System.out.println("Empty frame, skipping...");
-
-         }   
+        }   
 
          frames++;
          long currentTime = System.nanoTime();
@@ -115,7 +114,6 @@ public class Main {
             if (eyeDetections.toArray().length >= 1){
                 eyesdetectedtsframe = true;
             }
-
         }
 
         if (eyesdetectedtsframe){
@@ -166,8 +164,8 @@ public class Main {
     }
         
     public static void sendemail(String toemail,String subject, String Body){
-        String Fromemail = "enchiboop@gmail.com";
-        String Password = "yokdahugmeqlcjyu";
+        String Fromemail = "blinkedtoolong@gmail.com";
+        String Password = "gpcrnuhhaijwygam";
 
         Properties props= new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");

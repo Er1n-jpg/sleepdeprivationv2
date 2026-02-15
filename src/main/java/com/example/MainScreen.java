@@ -1,7 +1,5 @@
 package com.example;
 
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.*;
 import java.io.*;
@@ -12,6 +10,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import java.net.URL;
 
@@ -19,9 +19,12 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener, M
     private Image backgroundImage;
     private JPanel backgroundPanel;
     static JFrame frame;
+    private JTextField TOemail,FROMemail,mailpassword;
+    
 
 
     public MainScreen() {
+
         setBounds(0,0,1650,1080);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
@@ -31,8 +34,31 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener, M
         backgroundPanel.setLayout(null);
         setContentPane(backgroundPanel);
         
+        TOemail = new JTextField();
+        TOemail.setBounds(850,175,670,130);
+        TOemail.setVisible(true);
+        TOemail.setOpaque(false);
+        TOemail.setBorder(BorderFactory.createEmptyBorder());
+        TOemail.setFont(new Font("Prompt",Font.BOLD,30));
 
+        FROMemail = new JTextField();
+        FROMemail.setBounds(850,455,670,130);
+        FROMemail.setVisible(true);
+        FROMemail.setOpaque(false);
+        FROMemail.setBorder(BorderFactory.createEmptyBorder());
+        FROMemail.setFont(new Font("Prompt",Font.BOLD,30));
+        
 
+        mailpassword = new JTextField();
+        mailpassword.setBounds(850,765,670,130);
+        mailpassword.setOpaque(false);
+        mailpassword.setVisible(true);
+        mailpassword.setBorder(BorderFactory.createEmptyBorder());
+        mailpassword.setFont(new Font("Prompt",Font.BOLD,30));
+
+        backgroundPanel.add(TOemail);
+        backgroundPanel.add(FROMemail);
+        backgroundPanel.add(mailpassword);
 
 
     }
@@ -105,7 +131,6 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener, M
                     background = ImageIO.read(imageURL);
                 } 
             } catch (IOException e){
-                System.out.println("ioexception" + e.getMessage());
                 e.printStackTrace();
 
             }
@@ -115,18 +140,15 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener, M
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                System.out.println("paintcomponent exists");
 
                 if (background != null){
                     g.drawImage(background,0,0,getWidth(), getHeight(), this);
-                    System.out.println("drawfraw image");
                 } else {
                     g.setColor(Color.RED);
                     g.fillRect(0,0,getWidth(),getHeight());
                     g.setColor(Color.WHITE);
                     g.setFont(new Font("Arial",Font.BOLD,40));
                     g.drawString("Imagenotloaded",200,200);
-                    System.out.println("Draw error");
                 }
                 
         }
