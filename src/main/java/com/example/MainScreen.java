@@ -10,16 +10,18 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import java.net.URL;
 
-public class MainScreen extends JFrame implements ActionListener, KeyListener, MouseListener{
+public class MainScreen extends JFrame implements ActionListener, KeyListener{
     private Image backgroundImage;
     private JPanel backgroundPanel;
     static JFrame frame;
-    private JTextField TOemail,FROMemail,mailpassword;
+    private JTextField TOemail;
+    private JTextArea message;
     
 
 
@@ -35,96 +37,80 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener, M
         setContentPane(backgroundPanel);
         
         TOemail = new JTextField();
-        TOemail.setBounds(850,175,670,130);
+        TOemail.setBounds(885,290,660,130);
         TOemail.setVisible(true);
         TOemail.setOpaque(false);
         TOemail.setBorder(BorderFactory.createEmptyBorder());
         TOemail.setFont(new Font("Prompt",Font.BOLD,30));
+        TOemail.setCaretPosition(0);
+        TOemail.addActionListener(this);
 
-        FROMemail = new JTextField();
-        FROMemail.setBounds(850,455,670,130);
-        FROMemail.setVisible(true);
-        FROMemail.setOpaque(false);
-        FROMemail.setBorder(BorderFactory.createEmptyBorder());
-        FROMemail.setFont(new Font("Prompt",Font.BOLD,30));
-        
-
-        mailpassword = new JTextField();
-        mailpassword.setBounds(850,765,670,130);
-        mailpassword.setOpaque(false);
-        mailpassword.setVisible(true);
-        mailpassword.setBorder(BorderFactory.createEmptyBorder());
-        mailpassword.setFont(new Font("Prompt",Font.BOLD,30));
-
+        message = new JTextArea();
+        message.setBounds(885,555,640,310);
+        message.setVisible(true);
+        message.setLineWrap(true);
+        message.setWrapStyleWord(true);
+        message.setBorder(BorderFactory.createEmptyBorder());
+        message.setOpaque(false);
+        message.setFont(new Font("Prompt",Font.BOLD,30));
+        message.addKeyListener(this);
+                                
         backgroundPanel.add(TOemail);
-        backgroundPanel.add(FROMemail);
-        backgroundPanel.add(mailpassword);
+        backgroundPanel.add(message);
+
 
 
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseClicked'");
-    }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mousePressed'");
-    }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseReleased'");
-    }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseEntered'");
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mouseExited'");
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyTyped'");
+
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyPressed'");
+        if(e.getKeyCode() == KeyEvent.VK_ENTER && e.getKeyCode() != KeyEvent.VK_SHIFT){
+            String text = message.getText();
+                System.out.println("gonenenenenene");
+                System.out.println(text);
+                e.consume();
+                message.setEditable(false);
+                message.setCaretPosition(0);
+                message.getCaret().setVisible(false);
+            
+        } 
+
+        if (e.getKeyCode() == KeyEvent.VK_ENTER){
+
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'keyReleased'");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+        if (e.getSource() == TOemail){
+            String email = TOemail.getText();
+            TOemail.setEditable(false);
+            TOemail.setCaretPosition(0);
+            TOemail.getCaret().setVisible(false);
+            System.out.println(email);
+        }
     }
 
     class BackgroundPanel extends JPanel{
         private Image background;
 
         public BackgroundPanel(){
-            System.out.println("Constructorcalled");
 
             try{
-                URL imageURL = getClass().getResource("/BLink.png");
+                URL imageURL = getClass().getResource("BL2.png");
                 System.out.println("IMGURL:" + imageURL);
 
                 if (imageURL != null){
