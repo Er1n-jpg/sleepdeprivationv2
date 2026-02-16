@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.Timer;
 
 import java.net.URL;
 
@@ -25,7 +26,8 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
     private JTextField TOemail;
     private JTextArea message;
     private JButton proceed;
-    
+    private JLabel warning;
+    private Timer timer;
 
 
     public MainScreen() {
@@ -64,10 +66,19 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
         proceed.addActionListener(this);
         proceed.setBorderPainted(false);
         proceed.setOpaque(false);
+        proceed.setContentAreaFilled(false);
+
+        warning = new JLabel("Please enter an email to proceed!!!");
+        warning.setBounds(825,100,500,100);
+        warning.setFont(new Font("Prompt",Font.ITALIC,30));
+        warning.setVisible(false);
                                 
         backgroundPanel.add(TOemail);
         backgroundPanel.add(message);
         backgroundPanel.add(proceed);
+        backgroundPanel.add(warning);
+
+
 
 
     }
@@ -85,9 +96,9 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_ENTER){
             if (!e.isShiftDown()){
-            String text = message.getText();
-                System.out.println("gonenenenenene");
-                System.out.println(text);
+                bigdata.setmessage(message.getText());
+                System.out.println(bigdata.getmessage());
+                System.out.println(message.getText());
                 e.consume();
                 message.setEditable(false);
                 message.setCaretPosition(0);
@@ -104,24 +115,47 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == TOemail){
             String email = TOemail.getText();
-            bigdata.setmessage(email);
+            bigdata.setrecipient(email);
             TOemail.setEditable(false);
             TOemail.setCaretPosition(0);
             TOemail.getCaret().setVisible(false);
-            System.out.println(email);
+            System.out.println(bigdata.getrecipient());
         } 
 
-        if (e.getSource() == proceed){
-            if (bigdata.getrecipient() == ""){
-                System.out.println("Needs a recipient to send the email!!!");
-            } else {
-                System.out.println("yay going to new page");
-                new Main();
+       if (e.getSource() == proceed){
+            String recipient = bigdata.getrecipient();
+            String msg = bigdata.getmessage();
+
+            if (recipient == null || recipient.trim().isEmpty()){
+                warning.setVisible(true);
+                timer();
+                TOemail.setEditable(true);
+                TOemail.getCaret().setVisible(true);
+                
             }
-        }
+       }
+
     }
 
-    class BackgroundPanel extends JPanel{
+    public void timer(){
+            timer = new Timer(1000, e -> {
+            });
+
+            timer.start();
+
+            Timer stopTimer = new Timer (3000, e ->{
+            timer.stop();
+            ((Timer)e.getSource()).stop();
+            warning.setVisible(false);
+            System.out.println("fake news");
+            });
+            stopTimer.setRepeats(false);
+            stopTimer.start();
+    }
+
+}
+
+class BackgroundPanel extends JPanel{
         private Image background;
 
         public BackgroundPanel(){
@@ -155,7 +189,7 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
                 }
                 
         }
-    }
-
 }
+
+
 

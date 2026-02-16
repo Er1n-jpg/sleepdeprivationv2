@@ -72,7 +72,7 @@ public class Main {
 
             boolean eyesopen = true;
             int frameswoeyes = 0;
-            final int blinkthreshold = 28;
+            final int blinkthreshold = 3; //1 minute = ~28 frames holy jon
             int blinkcounter = 0;
             
             long lastime = System.nanoTime();
@@ -81,11 +81,6 @@ public class Main {
 
   
         while(newFeed.isVisible()){ 
-            boolean readSuccess = camera.read(image);
-            System.out.println("Frame read success: " + readSuccess);
-            System.out.println("Image empty: " + image.empty());
-            System.out.println("Image size: " + image.cols() + "x" + image.rows());
-            System.out.println("Image channels: " + image.channels());
             camera.read(image);
                 if (image.empty() || image.cols() == 0 || image.rows() == 0) {
                 System.out.println("Empty frame, skipping...");
@@ -96,18 +91,6 @@ public class Main {
                 }
                 continue;
         }   
-
-         frames++;
-         long currentTime = System.nanoTime();
-         double elapsedTime = (currentTime - lastime)/1_000_000_000.0;
-
-         if (elapsedTime >= 1.0){
-            fps = frames/elapsedTime;
-            frames = 0;
-            lastime = currentTime;
-            System.out.println("Fps =" + String.format("%2f",fps));
-         }
-
 
         boolean eyesdetectedtsframe = false;
         faceDetector.detectMultiScale(image, faceDetections);
@@ -156,7 +139,6 @@ public class Main {
 
                 if (!image.empty()) {
                 faceDetector.detectMultiScale(image, faceDetections);
-
             }   
 
         }

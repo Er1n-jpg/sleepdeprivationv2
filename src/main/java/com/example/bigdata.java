@@ -9,7 +9,7 @@ public class bigdata {
     }
 
     public static void setmessage(String message){
-        message = msg;
+        msg = message;
     }
     
     public static String getrecipient(){
