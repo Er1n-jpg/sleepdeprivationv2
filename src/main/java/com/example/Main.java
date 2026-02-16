@@ -35,6 +35,7 @@ public class Main {
 
     public Main(){
         System.out.println("yes");
+        OpenCV.loadLocally();
         CascadeClassifier faceDetector = new CascadeClassifier();
         CascadeClassifier eyeDetector = new CascadeClassifier();
         String classifierPath = "haarcascade_frontalface_default.xml";
@@ -54,6 +55,10 @@ public class Main {
         VideoCapture camera = new VideoCapture(0);
         camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_WIDTH, 1650);
         camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_HEIGHT, 1080);
+        if (!camera.isOpened()){
+            System.out.println("no open ahhhhh");
+        }
+        System.out.println("kameraopen");
         newFeed.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         if (!camera.isOpened()){
@@ -75,10 +80,21 @@ public class Main {
             double fps = 0.0;
 
   
-        while(newFeed.isVisible()){
+        while(newFeed.isVisible()){ 
+            boolean readSuccess = camera.read(image);
+            System.out.println("Frame read success: " + readSuccess);
+            System.out.println("Image empty: " + image.empty());
+            System.out.println("Image size: " + image.cols() + "x" + image.rows());
+            System.out.println("Image channels: " + image.channels());
             camera.read(image);
                 if (image.empty() || image.cols() == 0 || image.rows() == 0) {
                 System.out.println("Empty frame, skipping...");
+                try{
+                    Thread.sleep(10);
+                } catch (InterruptedException e){
+                    break;
+                }
+                continue;
         }   
 
          frames++;
@@ -119,7 +135,7 @@ public class Main {
         if (eyesdetectedtsframe){
             if (!eyesopen && frameswoeyes >= blinkthreshold){
                 blinkcounter++;
-                sendemail("lamvienghe@gmail.com", "honk mimimimi", "Erm so I fell asleep");
+                sendemail(bigdata.getrecipient(), "honk mimimimi", bigdata.getmessage());
                 System.out.println("Blinks:" + blinkcounter);
         }
 

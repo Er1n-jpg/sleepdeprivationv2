@@ -14,6 +14,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
 import java.net.URL;
 
 public class MainScreen extends JFrame implements ActionListener, KeyListener{
@@ -22,6 +24,7 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
     static JFrame frame;
     private JTextField TOemail;
     private JTextArea message;
+    private JButton proceed;
     
 
 
@@ -54,10 +57,17 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
         message.setOpaque(false);
         message.setFont(new Font("Prompt",Font.BOLD,30));
         message.addKeyListener(this);
+
+        proceed = new JButton("proceed");
+        proceed.setBounds(1350,30,250,150);
+        proceed.setVisible(true);
+        proceed.addActionListener(this);
+        proceed.setBorderPainted(false);
+        proceed.setOpaque(false);
                                 
         backgroundPanel.add(TOemail);
         backgroundPanel.add(message);
-
+        backgroundPanel.add(proceed);
 
 
     }
@@ -73,7 +83,8 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_ENTER && e.getKeyCode() != KeyEvent.VK_SHIFT){
+        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            if (!e.isShiftDown()){
             String text = message.getText();
                 System.out.println("gonenenenenene");
                 System.out.println(text);
@@ -81,12 +92,8 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
                 message.setEditable(false);
                 message.setCaretPosition(0);
                 message.getCaret().setVisible(false);
-            
+            }
         } 
-
-        if (e.getKeyCode() == KeyEvent.VK_ENTER){
-
-        }
     }
 
     @Override
@@ -97,10 +104,20 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == TOemail){
             String email = TOemail.getText();
+            bigdata.setmessage(email);
             TOemail.setEditable(false);
             TOemail.setCaretPosition(0);
             TOemail.getCaret().setVisible(false);
             System.out.println(email);
+        } 
+
+        if (e.getSource() == proceed){
+            if (bigdata.getrecipient() == ""){
+                System.out.println("Needs a recipient to send the email!!!");
+            } else {
+                System.out.println("yay going to new page");
+                new Main();
+            }
         }
     }
 
