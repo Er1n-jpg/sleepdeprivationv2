@@ -2,7 +2,7 @@ package com.example;
 
 public class bigdata {
     private static String to;
-    private static String msg;
+    private static String msg = "User is sleeping right now";
 
     public static String getmessage(){
         return msg;
@@ -19,7 +19,4 @@ public class bigdata {
     public static void setrecipient(String recipient){
         to = recipient;
     }
-
-
-
 }

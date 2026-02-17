@@ -56,13 +56,10 @@ public class Main {
         camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_WIDTH, 1650);
         camera.set(org.opencv.videoio.Videoio.CAP_PROP_FRAME_HEIGHT, 1080);
         if (!camera.isOpened()){
-            System.out.println("no open ahhhhh");
         }
-        System.out.println("kameraopen");
         newFeed.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         if (!camera.isOpened()){
-            System.out.println("Camera not open");
             return;
         }
 
@@ -193,11 +190,7 @@ public class Main {
             System.out.println("error");
             e.printStackTrace();  // This prints the full error details
         }
-
-        
-
     }
-
 }
 
 
