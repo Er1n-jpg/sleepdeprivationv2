@@ -17,6 +17,7 @@ import org.opencv.objdetect.CascadeClassifier;
 import nu.pattern.OpenCV;
 import javax.swing.*;
 
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.nio.Buffer;
@@ -46,7 +47,9 @@ public class Main {
 
         JFrame newFeed = new JFrame("Camerafeed");
         newFeed.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JLabel Label = new JLabel();
+        JLabel Label = new JLabel("loading...");
+        Label.setFont(new Font("Prompt", Font.BOLD, 67));
+        Label.setHorizontalAlignment(SwingConstants.CENTER);
         newFeed.getContentPane().add(Label);
         newFeed.setSize(1650,1080);
         newFeed.setVisible(true);
@@ -107,7 +110,8 @@ public class Main {
             Imgproc.rectangle(image,new Point( eyeregion.x + eyeRects.x, eyeregion.y + eyeRects.y), new Point(eyeregion.x + eyeRects.x + eyeRects.width, eyeregion.y + eyeRects.y + eyeRects.height), new Scalar(225,0,0),2);
             }
 
-            if (eyeDetections.toArray().length >= 1){
+            Rect [] ERArray = eyeDetections.toArray();
+            if (ERArray.length >= 1){
                 eyesdetectedtsframe = true;
             }
         }
@@ -130,13 +134,8 @@ public class Main {
             }
         }
      
-
-            ImageIcon frame = new ImageIcon(matToBufferedImage(image));
-            Label.setIcon(frame);
-
-                if (!image.empty()) {
-                faceDetector.detectMultiScale(image, faceDetections);
-            }   
+        ImageIcon frame = new ImageIcon(matToBufferedImage(image));
+        SwingUtilities.invokeLater(() -> Label.setIcon(frame));
 
         }
 
@@ -188,7 +187,6 @@ public class Main {
             Transport.send(message);
         } catch (MessagingException e){
             System.out.println("error");
-            e.printStackTrace();  // This prints the full error details
         }
     }
 }
