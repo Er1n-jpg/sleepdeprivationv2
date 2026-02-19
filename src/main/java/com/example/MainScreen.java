@@ -67,8 +67,8 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener {
         proceed.setOpaque(false);
         proceed.setContentAreaFilled(false);
 
-        warning = new JLabel("Please enter an email to proceed!!!");
-        warning.setBounds(825, 100, 500, 100);
+        warning = new JLabel("Please enter a valid email to proceed!!!");
+        warning.setBounds(825, 100, 540, 100);
         warning.setFont(new Font("Prompt", Font.ITALIC, 30));
         warning.setVisible(false);
 
@@ -76,6 +76,8 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener {
         backgroundPanel.add(message);
         backgroundPanel.add(proceed);
         backgroundPanel.add(warning);
+
+        
 
     }
 
@@ -117,14 +119,14 @@ public class MainScreen extends JFrame implements ActionListener, KeyListener {
             String recipient = bigdata.getrecipient();
             String msg = bigdata.getmessage();
 
-            if (recipient == null || recipient.trim().isEmpty()) {
+            if (recipient == null || recipient.trim().isEmpty() ||!(recipient.contains("@"))) {
                 warning.setVisible(true);
                 timer();
                 TOemail.setEditable(true);
                 TOemail.getCaret().setVisible(true);
             } else {
                 new Thread(() -> {
-                    new Main();
+                    new Camera();
                 }).start();
             }
         }
@@ -155,7 +157,7 @@ class BackgroundPanel extends JPanel {
     public BackgroundPanel() {
 
         try {
-            URL imageURL = getClass().getResource("BL2.png");
+            URL imageURL = getClass().getResource("/BL2.png");
             System.out.println("IMGURL:" + imageURL);
 
             if (imageURL != null) {

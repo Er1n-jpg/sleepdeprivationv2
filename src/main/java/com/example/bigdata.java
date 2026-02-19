@@ -2,7 +2,7 @@ package com.example;
 
 public class bigdata {
     private static String to;
-    private static String msg = "User is sleeping right now";
+    private static String msg = "User who sent you this is asleep right now";
 
     public static String getmessage(){
         return msg;
