@@ -21,3 +21,5 @@ Once getting past the intial screen it will bring you to a loading screen (notic
  **How to use**
  Close your eyes and keep them closed for about 10 seconds or even more depending on your RAM and frame rate. After opening your eyes check the designated to-email and there should be an email from the adress blinkedtoolong@gmail.com in which will notify you with the body message being the message option on the initial screen. If the email hasn't sent it might be because of a false detection **BE PATIENT AI MAKES MISTAKES**.
 
+
+Herro
