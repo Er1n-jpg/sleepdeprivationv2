@@ -2,7 +2,9 @@
 This is a program that tracks sees if you have closed your eyes for more than a minute and emails your email of choice. Initially this project was made to counter the fact I kept on sleeping in class + keep me accountable
 and it was also an excuse for me to make my very first project in OpenCV in a language i'm super familliar with!
 
-You can access this project through downloading one of the .exe files on the releases page (*warning!! .exe's are only for windows this is NOT mac compatable sorry) or it is accessable through a itch page [insert link]. It might give you a suspicious application warning but just click past that I PINKY PROMISE IM NOT TRYING TO HACK YOU!
+
+# Installation Instructions
+you must install java for this app to work. The release is a .jar file
 
 
 **How to navigate this project?**
